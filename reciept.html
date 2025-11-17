@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج بيانات الفاتورة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 35px;
+            font-size: 14px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-right: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #f44336;
+            margin-right: 3px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            direction: rtl;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input.error {
+            border-color: #f44336;
+            background: #fff5f5;
+        }
+
+        input.success {
+            border-color: #4caf50;
+        }
+
+        .items-container {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 15px;
+        }
+
+        .item-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 50px;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #666;
+            font-size: 13px;
+            padding: 0 5px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 50px;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .item-row:hover {
+            background: #f8f9fa;
+        }
+
+        .item-row input {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-add:active {
+            transform: translateY(0);
+        }
+
+        .btn-remove {
+            background: #f44336;
+            color: white;
+            padding: 12px;
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+        }
+
+        .btn-remove:hover {
+            background: #da190b;
+            transform: scale(1.1);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            font-size: 18px;
+            padding: 18px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+        }
+
+        .output {
+            display: none;
+            margin-top: 35px;
+            padding: 25px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            border: 2px solid #667eea;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+            }
+        }
+
+        .output h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 12px;
+            overflow-x: auto;
+            direction: ltr;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .total-display {
+            background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px solid #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 17px;
+            color: #333;
+        }
+
+        .total-row.grand {
+            border-top: 3px solid #667eea;
+            margin-top: 12px;
+            padding-top: 18px;
+            font-weight: 700;
+            font-size: 22px;
+            color: #667eea;
+        }
+
+        .total-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .validation-msg {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #f44336;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .item-header {
+                display: none;
+            }
+
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                background: #f8f9fa;
+                padding: 15px;
+                border: 1px solid #e0e0e0;
+            }
+
+            .btn-remove {
+                width: 100%;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .btn, .output {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 نموذج بيانات الفاتورة</h1>
+        <p class="subtitle">أدخل بيانات الفاتورة بدقة وسيتم إنشاء النموذج تلقائيًا</p>
+        
+        <form id="receiptForm" novalidate>
+            <!-- معلومات المحل -->
+            <div class="form-section">
+                <div class="section-title">
+                    <span>🏪</span>
+                    <span>معلومات المحل</span>
+                </div>
+                <div class="form-group">
+                    <label>اسم المحل <span class="required">*</span></label>
+                    <input type="text" id="shop_name" value="مخلد ابو الكص" required>
+                    <div class="validation-msg" id="shop_name_error">الرجاء إدخال اسم المحل</div>
+                </div>
+            </div>
+
+            <!-- معلومات الفاتورة -->
+            <div class="form-section">
+                <div class="section-title">
+                    <span>📄</span>
+                    <span>تفاصيل الفاتورة</span>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>رقم الفاتورة <span class="required">*</span></label>
+                        <input type="text" id="receipt_no" value="129" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>التاريخ <span class="required">*</span></label>
+                        <input type="text" id="date" value="16/11/2025" placeholder="DD/MM/YYYY" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الوقت <span class="required">*</span></label>
+                        <input type="text" id="time" value="10:00 م" placeholder="00:00 م/ص" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المنتجات -->
+            <div class="form-section">
+                <div class="section-title">
+                    <span>🛒</span>
+                    <span>المنتجات</span>
+                </div>
+                <div class="items-container">
+                    <button type="button" class="btn btn-add" onclick="addItem()">
+                        <span>➕</span>
+                        <span>إضافة منتج جديد</span>
+                    </button>
+                    
+                    <div class="item-header">
+                        <div>اسم المنتج</div>
+                        <div>الكمية</div>
+                        <div>السعر</div>
+                        <div>المجموع</div>
+                        <div></div>
+                    </div>
+                    
+                    <div id="items-list">
+                        <div class="item-row">
+                            <input type="text" placeholder="اسم المنتج" class="item-name" value="تشريب كص" required>
+                            <input type="number" placeholder="الكمية" class="item-quantity" value="7" min="1" required>
+                            <input type="number" placeholder="السعر" class="item-price" value="8000" min="0" step="0.01" required>
+                            <input type="number" placeholder="المجموع" class="item-total" value="56000" readonly>
+                            <button type="button" class="btn btn-remove" onclick="removeItem(this)" title="حذف المنتج">🗑️</button>
+                        </div>
+                        <div class="item-row">
+                            <input type="text" placeholder="اسم المنتج" class="item-name" value="ماء" required>
+                            <input type="number" placeholder="الكمية" class="item-quantity" value="8" min="1" required>
+                            <input type="number" placeholder="السعر" class="item-price" value="250" min="0" step="0.01" required>
+                            <input type="number" placeholder="المجموع" class="item-total" value="2000" readonly>
+                            <button type="button" class="btn btn-remove" onclick="removeItem(this)" title="حذف المنتج">🗑️</button>
+                        </div>
+                        <div class="item-row">
+                            <input type="text" placeholder="اسم المنتج" class="item-name" value="ببسي" required>
+                            <input type="number" placeholder="الكمية" class="item-quantity" value="7" min="1" required>
+                            <input type="number" placeholder="السعر" class="item-price" value="500" min="0" step="0.01" required>
+                            <input type="number" placeholder="المجموع" class="item-total" value="3500" readonly>
+                            <button type="button" class="btn btn-remove" onclick="removeItem(this)" title="حذف المنتج">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- عرض المجاميع -->
+                <div class="total-display">
+                    <div class="total-row">
+                        <span>💰 المجموع الفرعي:</span>
+                        <span class="total-value" id="subtotal-display">61500</span>
+                    </div>
+                    <div class="total-row grand">
+                        <span>💳 المجموع الكلي:</span>
+                        <span class="total-value" id="total-display">61500</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- رسائل إضافية -->
+            <div class="form-section">
+                <div class="section-title">
+                    <span>💬</span>
+                    <span>معلومات إضافية</span>
+                </div>
+                <div class="form-group">
+                    <label>رسالة الشكر</label>
+                    <input type="text" id="thank_you_msg" value="شكرا لزيارتكم" placeholder="اكتب رسالة شكر للعميل">
+                </div>
+
+                <div class="form-group">
+                    <label>معلومات الاتصال</label>
+                    <textarea id="contact" rows="3" placeholder="رقم الهاتف، العنوان، البريد الإلكتروني..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-submit">
+                <span>🚀</span>
+                <span>إنشاء النموذج</span>
+            </button>
+        </form>
+
+        <button type="button" class="btn btn-copy" id="copyBtn" onclick="copyToClipboard()">
+            <span>📋</span>
+            <span>نسخ النموذج</span>
+        </button>
+        
+        <div class="success-message" id="successMsg">✅ تم نسخ النموذج بنجاح إلى الحافظة!</div>
+
+        <div class="output" id="output">
+            <h2>
+                <span>📄</span>
+                <span>النموذج الناتج</span>
+            </h2>
+            <pre id="jsonOutput"></pre>
+        </div>
+    </div>
+
+    <script>
+        // حساب المجموع التلقائي
+        function calculateTotals() {
+            const itemRows = document.querySelectorAll('.item-row');
+            let subtotal = 0;
+            
+            itemRows.forEach(row => {
+                const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const itemTotal = quantity * price;
+                
+                row.querySelector('.item-total').value = itemTotal;
+                subtotal += itemTotal;
+            });
+            
+            document.getElementById('subtotal-display').textContent = subtotal.toLocaleString('ar-IQ');
+            document.getElementById('total-display').textContent = subtotal.toLocaleString('ar-IQ');
+            
+            return subtotal;
+        }
+
+        // التحقق من صحة الإدخال في الوقت الفعلي
+        function validateInput(input) {
+            if (input.hasAttribute('required') && !input.value.trim()) {
+                input.classList.add('error');
+                input.classList.remove('success');
+                return false;
+            } else if (input.value.trim()) {
+                input.classList.remove('error');
+                input.classList.add('success');
+                return true;
+            }
+            input.classList.remove('error', 'success');
+            return true;
+        }
+
+        // حساب المجموع عند تغيير الكمية أو السعر
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('item-quantity') || e.target.classList.contains('item-price')) {
+                calculateTotals();
+            }
+            
+            // التحقق الفوري
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                validateInput(e.target);
+            }
+        });
+
+        // إضافة منتج جديد
+        function addItem() {
+            const itemsList = document.getElementById('items-list');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-row';
+            newItem.innerHTML = `
+                <input type="text" placeholder="اسم المنتج" class="item-name" required>
+                <input type="number" placeholder="الكمية" class="item-quantity" value="1" min="1" required>
+                <input type="number" placeholder="السعر" class="item-price" value="0" min="0" step="0.01" required>
+                <input type="number" placeholder="المجموع" class="item-total" value="0" readonly>
+                <button type="button" class="btn btn-remove" onclick="removeItem(this)" title="حذف المنتج">🗑️</button>
+            `;
+            itemsList.appendChild(newItem);
+            
+            // تركيز على حقل اسم المنتج الجديد
+            newItem.querySelector('.item-name').focus();
+            calculateTotals();
+        }
+
+        // حذف منتج
+        function removeItem(btn) {
+            const itemsList = document.getElementById('items-list');
+            if (itemsList.children.length > 1) {
+                btn.closest('.item-row').remove();
+                calculateTotals();
+            } else {
+                alert('⚠️ يجب أن يكون هناك منتج واحد على الأقل!');
+            }
+        }
+
+        // معالجة النموذج
+        document.getElementById('receiptForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // التحقق من صحة جميع الحقول
+            let isValid = true;
+            const requiredInputs = this.querySelectorAll('[required]');
+            requiredInputs.forEach(input => {
+                if (!validateInput(input)) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                alert('⚠️ الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // جمع بيانات المنتجات
+            const items = [];
+            const itemRows = document.querySelectorAll('.item-row');
+            itemRows.forEach(row => {
+                const name = row.querySelector('.item-name').value;
+                const quantity = parseFloat(row.querySelector('.item-quantity').value);
+                const price = parseFloat(row.querySelector('.item-price').value);
+                const total = parseFloat(row.querySelector('.item-total').value);
+                
+                items.push({
+                    name: name,
+                    quantity: quantity,
+                    price: price,
+                    total: total
+                });
+            });
+
+            // حساب المجموع
+            const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+
+            // إنشاء الكائن النهائي
+            const receiptData = {
+                shop_name: document.getElementById('shop_name').value,
+                logo_path: 'mukhalladgass.png',
+                receipt_no: document.getElementById('receipt_no').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                items: items,
+                subtotal: subtotal,
+                tax: 0,
+                discount: 0,
+                total: subtotal,
+                thank_you_msg: document.getElementById('thank_you_msg').value,
+                contact: document.getElementById('contact').value
+            };
+
+            // عرض النتيجة
+            const jsonOutput = document.getElementById('jsonOutput');
+            jsonOutput.textContent = JSON.stringify(receiptData, null, 4);
+            
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('copyBtn').style.display = 'flex';
+            
+            // التمرير السلس إلى النتيجة
+            setTimeout(() => {
+                document.getElementById('output').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            }, 100);
+        });
+
+        // نسخ إلى الحافظة
+        async function copyToClipboard() {
+            const jsonText = document.getElementById('jsonOutput').textContent;
+            
+            try {
+                // استخدام API الحديث إذا كان متاحاً
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(jsonText);
+                    showSuccessMessage();
+                } else {
+                    // البديل للمتصفحات القديمة
+                    const textarea = document.createElement('textarea');
+                    textarea.value = jsonText;
+                    textarea.style.position = 'fixed';
+                    textarea.style.left = '-9999px';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showSuccessMessage();
+                }
+            } catch (err) {
+                alert('❌ فشل النسخ. الرجاء المحاولة مرة أخرى.');
+            }
+        }
+
+        function showSuccessMessage() {
+            const successMsg = document.getElementById('successMsg');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // حساب المجاميع عند التحميل
+        window.addEventListener('load', function() {
+            calculateTotals();
+        });
+
+        // حفظ البيانات محلياً (اختياري)
+        const form = document.getElementById('receiptForm');
+        form.addEventListener('change', function() {
+            // يمكن إضافة localStorage هنا للحفظ التلقائي
+        });
+    </script>
+</body>
+</html>
